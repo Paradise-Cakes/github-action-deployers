@@ -1,0 +1,119 @@
+name: Github Action Deployers CI/CD Pipeline
+
+on:
+  push:
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  id-token: write
+  pull-requests: write
+  contents: read
+
+concurrency:
+  group: ${{ github.ref == 'refs/heads/main' && 'main-branch' || 'feature-branches' }}
+  cancel-in-progress: true
+
+jobs:
+  tf-dev:
+    runs-on: ubuntu-latest
+    if: "!contains(github.ref, 'revert')"
+    environment: dev
+    concurrency: tf-dev
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set GIT variables
+        run: |
+          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
+          echo "BRANCH_NAME=`echo ${GITHUB_REF_NAME} | tr / _`" >> $GITHUB_ENV
+
+      - name: Configure AWS credentials for us-east-1
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::010526276358:role/iam-development-deployer-admin
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2.0.0
+        with:
+          terraform_version: 1.2.7
+
+      - name: Terraform Init - DEV
+        id: tf-init-dev
+        run: |
+          cd ${GITHUB_WORKSPACE}/terraform
+          terraform init \
+            --backend-config="bucket=github-action-deployers-dev-tfstate" \
+            --backend-config="key=github-action-deployers-dev.tfstate"
+
+      - name: Terraform Plan - DEV
+        id: tf-plan-dev
+        env:
+          TF_VAR_environment: dev
+          TF_VAR_region: us-east-1
+        run: |
+          cd ${GITHUB_WORKSPACE}/terraform
+          terraform plan --out tfplan.out
+
+      - name: Terraform Apply - DEV
+        id: tf-apply-dev
+        run: |
+          cd ${GITHUB_WORKSPACE}/terraform
+          terraform apply --auto-approve tfplan.out
+
+  tf-prod:
+    runs-on: ubuntu-latest
+    environment: prod
+    concurrency: tf-prod
+    timeout-minutes: 30
+    needs: [tf-dev]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set GIT variables
+        run: |
+          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
+          echo "BRANCH_NAME=`echo ${GITHUB_REF_NAME} | tr / _`" >> $GITHUB_ENV
+
+      - name: Configure AWS credentials for us-east-1
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::132899756990:role/iam-deployer-admin
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2.0.0
+        with:
+          terraform_version: 1.2.7
+
+      - name: Terraform Init - PROD
+        id: tf-init-prod
+        run: |
+          cd ${GITHUB_WORKSPACE}/terraform
+          terraform init \
+            --backend-config="bucket=github-action-deployers-tfstate" \
+            --backend-config="key=github-action-deployers.tfstate"
+
+      - name: Terraform Plan - PROD
+        id: tf-plan-prod
+        env:
+          TF_VAR_environment: prod
+          TF_VAR_region: us-east-1
+        run: |
+          cd ${GITHUB_WORKSPACE}/terraform
+          terraform plan --out tfplan.out
+
+      - name: Terraform Apply - PROD
+        id: tf-apply-prod
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          cd ${GITHUB_WORKSPACE}/terraform
+          terraform apply --auto-approve tfplan.out
