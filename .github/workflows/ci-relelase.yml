@@ -20,7 +20,6 @@ jobs:
   tf-dev:
     runs-on: ubuntu-latest
     if: "!contains(github.ref, 'revert')"
-    environment: dev
     concurrency: tf-dev
     timeout-minutes: 30
 
@@ -69,7 +68,6 @@ jobs:
 
   tf-prod:
     runs-on: ubuntu-latest
-    environment: prod
     concurrency: tf-prod
     timeout-minutes: 30
     needs: [tf-dev]
