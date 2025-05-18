@@ -5,13 +5,21 @@ data "aws_iam_policy_document" "desserts_api_tf_deployer_assume_role_policy" {
       type        = "Federated"
       identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com"]
     }
+
     condition {
       test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+
+    condition {
+      test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
       values   = ["repo:Paradise-Cakes/*"]
     }
   }
 }
+
 
 resource "aws_iam_role" "desserts_api_tf_deployer_role" {
   name               = "desserts-api-tf-deployer-${var.environment}"
