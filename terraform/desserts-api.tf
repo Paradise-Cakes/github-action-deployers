@@ -98,6 +98,34 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         Resource = [
           data.aws_ecr_repository.desserts_api_repository.arn
         ]
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "iam:GetRole",
+          "iam:GetPolicy",
+        ],
+        Resource = [
+          data.aws_iam_role.desserts_api_role.arn,
+          data.aws_iam_policy.desserts_api_policy.arn,
+          data.aws_iam_policy.datadog_kms_policy.arn
+        ]
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "route53:ListHostedZones",
+        ],
+        Resource = ["*"]
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:GetBucketPolicy"
+        ],
+        Resource = [
+          data.aws_s3_bucket.dessert_images_bucket.arn
+        ]
       }
     ]
   })
