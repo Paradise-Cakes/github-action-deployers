@@ -1,16 +1,21 @@
-resource "aws_iam_role" "desserts_api_tf_deployer_role" {
-  name = "desserts-api-tf-deployer-${var.environment}"
+data "aws_iam_policy_document" "desserts_api_tf_deployer_assume_role_policy" {
+  statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+    principals {
+      type        = "Federated"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com"]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:sub"
+      values   = ["repo:Paradise-Cakes/*"]
+    }
+  }
+}
 
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [{
-      Effect = "Allow",
-      Principal = {
-        Service = "lambda.amazonaws.com"
-      },
-      Action = "sts:AssumeRole"
-    }]
-  })
+resource "aws_iam_role" "desserts_api_tf_deployer_role" {
+  name               = "desserts-api-tf-deployer-${var.environment}"
+  assume_role_policy = data.aws_iam_policy_document.desserts_api_tf_deployer_assume_role_policy.json
 }
 
 resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
@@ -32,17 +37,6 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           data.aws_s3_bucket.dessert_images_bucket.arn,
           "${data.aws_s3_bucket.dessert_images_bucket.arn}/*"
         ]
-        }, {
-        Effect = "Allow",
-        Principal = {
-          Federated = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com"
-        },
-        Action = "sts:AssumeRoleWithWebIdentity",
-        Condition = {
-          StringEquals = {
-            "token.actions.githubusercontent.com:sub" = "repo:Paradise-Cakes/*"
-          }
-        }
       }
     ]
   })
