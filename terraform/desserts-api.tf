@@ -36,14 +36,11 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
       {
         Effect = "Allow",
         Action = [
-          "s3:ListBucket",
-          "s3:GetObject",
-          "s3:PutObject",
-          "s3:DeleteObject"
+          "s3:GetObject"
         ],
         Resource = [
-          data.aws_s3_bucket.dessert_images_bucket.arn,
-          "${data.aws_s3_bucket.dessert_images_bucket.arn}/*"
+          data.aws_s3_bucket.desserts_api_tf_state_bucket.arn,
+          "${data.aws_s3_bucket.desserts_api_tf_state_bucket.arn}/*"
         ]
       }
     ]
