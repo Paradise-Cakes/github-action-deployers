@@ -42,6 +42,62 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           data.aws_s3_bucket.desserts_api_tf_state_bucket.arn,
           "${data.aws_s3_bucket.desserts_api_tf_state_bucket.arn}/*"
         ]
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "acm:ListCertificates",
+        ],
+        Resource = [
+          data.aws_acm_certificate_desserts_api_cert.arn,
+        ]
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "apigateway:GET",
+        ],
+        Resource = [
+          data.api_gateway_rest_api.desserts_rest_api.arn,
+        ]
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "logs:DescribeLogGroups"
+        ],
+        Resource = [
+          data.aws_cloudwatch_log_group.desserts_api_log_group.arn,
+        ]
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "cognito-idp:DescribeUserPool"
+        ],
+        Resource = [
+          data.aws_cognito_user_pool.paradise_cakes_user_pool.arn
+        ]
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "dynamodb:DescribeTable",
+        ],
+        Resource = [
+          data.aws_dynamodb_table.desserts_table.arn,
+          data.aws_dynamodb_table.desserts_type_count_table.arn,
+          data.aws_dynamodb_table.prices_table.arn
+        ]
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "ecr:DescribeRepositories",
+        ],
+        Resource = [
+          data.aws_ecr_repository.desserts_api_repository.arn
+        ]
       }
     ]
   })
