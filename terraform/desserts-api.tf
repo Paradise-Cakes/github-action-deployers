@@ -49,7 +49,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "acm:ListCertificates",
         ],
         Resource = [
-          data.aws_acm_certificate_desserts_api_cert.arn,
+          data.aws_acm_certificate.desserts_api_cert.arn,
         ]
       },
       {
@@ -58,7 +58,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "apigateway:GET",
         ],
         Resource = [
-          data.api_gateway_rest_api.desserts_rest_api.arn,
+          data.aws_api_gateway_rest_api.desserts_rest_api.arn,
         ]
       },
       {
