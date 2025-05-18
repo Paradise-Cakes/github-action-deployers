@@ -32,6 +32,17 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           data.aws_s3_bucket.dessert_images_bucket.arn,
           "${data.aws_s3_bucket.dessert_images_bucket.arn}/*"
         ]
+        }, {
+        Effect = "Allow",
+        Principal = {
+          Federated = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com"
+        },
+        Action = "sts:AssumeRoleWithWebIdentity",
+        Condition = {
+          StringEquals = {
+            "token.actions.githubusercontent.com:sub" = "repo:Paradise-Cakes/*"
+          }
+        }
       }
     ]
   })
