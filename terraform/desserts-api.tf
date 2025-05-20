@@ -49,6 +49,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "acm:ListCertificates",
           "acm:DescribeCertificate",
           "acm:GetCertificate",
+          "acm:ListTagsForCertificate"
         ],
         Resource = ["*"]
       },
@@ -135,6 +136,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "s3:GetBucketAcl",
           "s3:GetBucketCORS",
           "s3:GetBucketWebsite",
+          "s3:GetBucketVersioning",
         ],
         Resource = [
           data.aws_s3_bucket.dessert_images_bucket.arn
