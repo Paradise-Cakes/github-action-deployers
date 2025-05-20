@@ -60,7 +60,9 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         ],
         Resource = [
           "arn:aws:apigateway:${var.region}::/restapis/${data.aws_api_gateway_rest_api.desserts_rest_api.id}/*",
-          "arn:aws:apigateway:${var.region}::/restapis/${data.aws_api_gateway_rest_api.desserts_rest_api.id}"
+          "arn:aws:apigateway:${var.region}::/restapis/${data.aws_api_gateway_rest_api.desserts_rest_api.id}",
+          "arn:aws:apigateway:${var.region}::/domainnames/${data.aws_api_gateway_domain_name.desserts_domain_name.domain_name}",
+          "arn:aws:apigateway:${var.region}::/domainnames/${data.aws_api_gateway_domain_name.desserts_domain_name.domain_name}/*",
         ]
       },
       {
@@ -137,6 +139,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "s3:GetBucketCORS",
           "s3:GetBucketWebsite",
           "s3:GetBucketVersioning",
+          "s3:GetAccelerateConfiguration",
         ],
         Resource = [
           data.aws_s3_bucket.dessert_images_bucket.arn
