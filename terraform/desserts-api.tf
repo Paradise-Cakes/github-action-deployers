@@ -139,6 +139,15 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         Resource = [
           data.aws_s3_bucket.dessert_images_bucket.arn
         ]
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "lambda:GetFunction",
+        ],
+        Resource = [
+          data.aws_lambda_function.desserts_api.arn
+        ]
       }
     ]
   })
