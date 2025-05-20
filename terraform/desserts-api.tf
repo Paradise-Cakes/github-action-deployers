@@ -57,6 +57,12 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         Effect = "Allow",
         Action = [
           "apigateway:GET",
+          "apigateway:PATCH",
+          "apigateway:PUT",
+          "apigateway:POST",
+          "apigateway:DELETE",
+          "apigateway:HEAD",
+          "apigateway:OPTIONS",
         ],
         Resource = [
           "arn:aws:apigateway:${var.region}::/restapis/${data.aws_api_gateway_rest_api.desserts_rest_api.id}/*",
