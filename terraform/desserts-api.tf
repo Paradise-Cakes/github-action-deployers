@@ -47,6 +47,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         Effect = "Allow",
         Action = [
           "acm:ListCertificates",
+          "acm:DescribeCertificate"
         ],
         Resource = ["*"]
       },
@@ -56,13 +57,15 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "apigateway:GET",
         ],
         Resource = [
-          "arn:aws:apigateway:${var.region}::/restapis/${data.aws_api_gateway_rest_api.desserts_rest_api.id}/*"
+          "arn:aws:apigateway:${var.region}::/restapis/${data.aws_api_gateway_rest_api.desserts_rest_api.id}/*",
+          "arn:aws:apigateway:${var.region}::/restapis/${data.aws_api_gateway_rest_api.desserts_rest_api.id}"
         ]
       },
       {
         Effect = "Allow",
         Action = [
-          "logs:DescribeLogGroups"
+          "logs:DescribeLogGroups",
+          "logs:ListTagsForResource",
         ],
         Resource = ["*"]
       },
@@ -79,7 +82,8 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         Effect = "Allow",
         Action = [
           "dynamodb:DescribeTable",
-          "dynamodb:DescribeContinuousBackups"
+          "dynamodb:DescribeContinuousBackups",
+          "dynamodb:DescribeTimeToLive",
         ],
         Resource = [
           data.aws_dynamodb_table.desserts_table.arn,
@@ -92,6 +96,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         Action = [
           "ecr:DescribeRepositories",
           "ecr:DescribeImages",
+          "ecr:ListTagsForResource",
         ],
         Resource = [
           data.aws_ecr_repository.desserts_api_repository.arn
@@ -104,6 +109,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "iam:GetPolicy",
           "iam:ListRolePolicies",
           "iam:GetPolicyVersion",
+          "iam:ListAttachedRolePolicies"
         ],
         Resource = [
           data.aws_iam_role.desserts_api_role.arn,
@@ -116,6 +122,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         Action = [
           "route53:ListHostedZones",
           "route53:GetHostedZone",
+          "route53:ListTagsForResource"
         ],
         Resource = ["*"]
       },
@@ -124,6 +131,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         Action = [
           "s3:GetBucketPolicy",
           "s3:GetBucketAcl",
+          "s3:GetBucketCORS"
         ],
         Resource = [
           data.aws_s3_bucket.dessert_images_bucket.arn
