@@ -48,9 +48,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         Action = [
           "acm:ListCertificates",
         ],
-        Resource = [
-          data.aws_acm_certificate.desserts_api_cert.arn,
-        ]
+        Resource = ["*"]
       },
       {
         Effect = "Allow",
@@ -58,7 +56,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "apigateway:GET",
         ],
         Resource = [
-          data.aws_api_gateway_rest_api.desserts_rest_api.arn,
+          "arn:aws:apigateway:${var.region}::/restapis/${data.aws_api_gateway_rest_api.desserts_rest_api.id}/*"
         ]
       },
       {
@@ -66,9 +64,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         Action = [
           "logs:DescribeLogGroups"
         ],
-        Resource = [
-          data.aws_cloudwatch_log_group.desserts_api_log_group.arn,
-        ]
+        Resource = ["*"]
       },
       {
         Effect = "Allow",
@@ -83,6 +79,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         Effect = "Allow",
         Action = [
           "dynamodb:DescribeTable",
+          "dynamodb:DescribeContinuousBackups"
         ],
         Resource = [
           data.aws_dynamodb_table.desserts_table.arn,
@@ -94,6 +91,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         Effect = "Allow",
         Action = [
           "ecr:DescribeRepositories",
+          "ecr:DescribeImages",
         ],
         Resource = [
           data.aws_ecr_repository.desserts_api_repository.arn
@@ -104,6 +102,8 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         Action = [
           "iam:GetRole",
           "iam:GetPolicy",
+          "iam:ListRolePolicies",
+          "iam:GetPolicyVersion",
         ],
         Resource = [
           data.aws_iam_role.desserts_api_role.arn,
@@ -115,13 +115,15 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         Effect = "Allow",
         Action = [
           "route53:ListHostedZones",
+          "route53:GetHostedZone",
         ],
         Resource = ["*"]
       },
       {
         Effect = "Allow",
         Action = [
-          "s3:GetBucketPolicy"
+          "s3:GetBucketPolicy",
+          "s3:GetBucketAcl",
         ],
         Resource = [
           data.aws_s3_bucket.dessert_images_bucket.arn
