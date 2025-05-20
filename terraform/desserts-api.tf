@@ -134,16 +134,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
       {
         Effect = "Allow",
         Action = [
-          "s3:GetBucketPolicy",
-          "s3:GetBucketAcl",
-          "s3:GetBucketCORS",
-          "s3:GetBucketWebsite",
-          "s3:GetBucketVersioning",
-          "s3:GetAccelerateConfiguration",
-          "s3:GetBucketRequestPayment",
-          "s3:GetBucketLogging",
-          "s3:GetLifecycleConfiguration",
-          "s3:GetReplicationConfiguration",
+          "s3:*",
         ],
         Resource = [
           data.aws_s3_bucket.dessert_images_bucket.arn
