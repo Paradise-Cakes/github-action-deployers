@@ -143,7 +143,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
       {
         Effect = "Allow",
         Action = [
-          "lambda:GetFunction",
+          "lambda:*",
         ],
         Resource = [
           data.aws_lambda_function.desserts_api.arn
