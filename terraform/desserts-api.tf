@@ -47,7 +47,8 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         Effect = "Allow",
         Action = [
           "acm:ListCertificates",
-          "acm:DescribeCertificate"
+          "acm:DescribeCertificate",
+          "acm:GetCertificate",
         ],
         Resource = ["*"]
       },
@@ -84,6 +85,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "dynamodb:DescribeTable",
           "dynamodb:DescribeContinuousBackups",
           "dynamodb:DescribeTimeToLive",
+          "dynamodb:ListTagsOfResource",
         ],
         Resource = [
           data.aws_dynamodb_table.desserts_table.arn,
@@ -131,7 +133,8 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         Action = [
           "s3:GetBucketPolicy",
           "s3:GetBucketAcl",
-          "s3:GetBucketCORS"
+          "s3:GetBucketCORS",
+          "s3:GetBucketWebsite",
         ],
         Resource = [
           data.aws_s3_bucket.dessert_images_bucket.arn
