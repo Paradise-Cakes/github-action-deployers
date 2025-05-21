@@ -108,6 +108,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "ecr:DescribeRepositories",
           "ecr:DescribeImages",
           "ecr:ListTagsForResource",
+          "ecr:GetAuthorizationToken",
         ],
         Resource = [
           data.aws_ecr_repository.desserts_api_repository.arn
