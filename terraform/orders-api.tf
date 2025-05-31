@@ -1,4 +1,4 @@
-data "aws_iam_policy_document" "desserts_api_tf_deployer_assume_role_policy" {
+data "aws_iam_policy_document" "orders_api_tf_deployer_assume_role_policy" {
   statement {
     actions = ["sts:AssumeRoleWithWebIdentity"]
     principals {
@@ -20,14 +20,14 @@ data "aws_iam_policy_document" "desserts_api_tf_deployer_assume_role_policy" {
   }
 }
 
-resource "aws_iam_role" "desserts_api_tf_deployer_role" {
-  name               = "desserts-api-tf-deployer-${var.environment}"
-  assume_role_policy = data.aws_iam_policy_document.desserts_api_tf_deployer_assume_role_policy.json
+resource "aws_iam_role" "orders_api_tf_deployer_role" {
+  name               = "orders-api-tf-deployer-${var.environment}"
+  assume_role_policy = data.aws_iam_policy_document.orders_api_tf_deployer_assume_role_policy.json
 }
 
-resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
-  name        = "desserts-api-tf-deployer-policy-${var.environment}"
-  description = "Policy to manage Terraform deployer for desserts API"
+resource "aws_iam_policy" "orders_api_tf_deployer_policy" {
+  name        = "orders-api-tf-deployer-policy-${var.environment}"
+  description = "Policy to manage Terraform deployer for orders API"
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -38,8 +38,8 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "s3:*"
         ],
         Resource = [
-          data.aws_s3_bucket.desserts_api_tf_state_bucket.arn,
-          "${data.aws_s3_bucket.desserts_api_tf_state_bucket.arn}/*"
+          data.aws_s3_bucket.orders_api_tf_state_bucket.arn,
+          "${data.aws_s3_bucket.orders_api_tf_state_bucket.arn}/*"
         ]
       },
       {
@@ -64,10 +64,10 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "apigateway:OPTIONS",
         ],
         Resource = [
-          "arn:aws:apigateway:${var.region}::/restapis/${data.aws_api_gateway_rest_api.desserts_rest_api.id}/*",
-          "arn:aws:apigateway:${var.region}::/restapis/${data.aws_api_gateway_rest_api.desserts_rest_api.id}",
-          "arn:aws:apigateway:${var.region}::/domainnames/${data.aws_api_gateway_domain_name.desserts_domain_name.domain_name}",
-          "arn:aws:apigateway:${var.region}::/domainnames/${data.aws_api_gateway_domain_name.desserts_domain_name.domain_name}/*",
+          "arn:aws:apigateway:${var.region}::/restapis/${data.aws_api_gateway_rest_api.orders_rest_api.id}/*",
+          "arn:aws:apigateway:${var.region}::/restapis/${data.aws_api_gateway_rest_api.orders_rest_api.id}",
+          "arn:aws:apigateway:${var.region}::/domainnames/${data.aws_api_gateway_domain_name.orders_domain_name.domain_name}",
+          "arn:aws:apigateway:${var.region}::/domainnames/${data.aws_api_gateway_domain_name.orders_domain_name.domain_name}/*",
         ]
       },
       {
@@ -96,8 +96,8 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "dynamodb:ListTagsOfResource",
         ],
         Resource = [
-          data.aws_dynamodb_table.desserts_table.arn,
-          data.aws_dynamodb_table.desserts_type_count_table.arn,
+          data.aws_dynamodb_table.orders_table.arn,
+          data.aws_dynamodb_table.orders_type_count_table.arn,
           data.aws_dynamodb_table.prices_table.arn
         ]
       },
@@ -109,7 +109,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "ecr:ListTagsForResource",
         ],
         Resource = [
-          data.aws_ecr_repository.desserts_api_repository.arn
+          data.aws_ecr_repository.orders_api_repository.arn
         ]
       },
       {
@@ -150,8 +150,8 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "iam:ListAttachedRolePolicies"
         ],
         Resource = [
-          data.aws_iam_role.desserts_api_role.arn,
-          data.aws_iam_policy.desserts_api_policy.arn,
+          data.aws_iam_role.orders_api_role.arn,
+          data.aws_iam_policy.orders_api_policy.arn,
           data.aws_iam_policy.datadog_kms_policy.arn
         ]
       },
@@ -179,14 +179,9 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "lambda:*",
         ],
         Resource = [
-          data.aws_lambda_function.desserts_api.arn
+          data.aws_lambda_function.orders_api.arn
         ]
       }
     ]
   })
-}
-
-resource "aws_iam_role_policy_attachment" "desserts_api_tf_deployer_attachment" {
-  policy_arn = aws_iam_policy.desserts_api_tf_deployer_policy.arn
-  role       = aws_iam_role.desserts_api_tf_deployer_role.name
 }
