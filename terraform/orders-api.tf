@@ -62,6 +62,7 @@ resource "aws_iam_policy" "orders_api_tf_deployer_policy" {
           "apigateway:DELETE",
           "apigateway:HEAD",
           "apigateway:OPTIONS",
+          "apigateway:UpdateRestApiPolicy",
         ],
         Resource = [
           "arn:aws:apigateway:${var.region}::/restapis/${data.aws_api_gateway_rest_api.orders_rest_api.id}/*",
