@@ -64,12 +64,7 @@ resource "aws_iam_policy" "orders_api_tf_deployer_policy" {
           "apigateway:OPTIONS",
           "apigateway:UpdateRestApiPolicy",
         ],
-        Resource = [
-          "arn:aws:apigateway:${var.region}::/restapis/${data.aws_api_gateway_rest_api.orders_rest_api.id}/*",
-          "arn:aws:apigateway:${var.region}::/restapis/${data.aws_api_gateway_rest_api.orders_rest_api.id}",
-          "arn:aws:apigateway:${var.region}::/domainnames/${data.aws_api_gateway_domain_name.orders_domain_name.domain_name}",
-          "arn:aws:apigateway:${var.region}::/domainnames/${data.aws_api_gateway_domain_name.orders_domain_name.domain_name}/*",
-        ]
+        Resource = ["*"]
       },
       {
         Effect = "Allow",
