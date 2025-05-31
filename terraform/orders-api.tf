@@ -150,7 +150,8 @@ resource "aws_iam_policy" "orders_api_tf_deployer_policy" {
         Resource = [
           data.aws_iam_role.orders_api_role.arn,
           data.aws_iam_policy.orders_api_policy.arn,
-          data.aws_iam_policy.datadog_kms_policy.arn
+          data.aws_iam_policy.datadog_kms_policy.arn,
+          "*"
         ]
       },
       {
