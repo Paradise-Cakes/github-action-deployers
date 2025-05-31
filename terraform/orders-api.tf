@@ -185,3 +185,8 @@ resource "aws_iam_policy" "orders_api_tf_deployer_policy" {
     ]
   })
 }
+
+resource "aws_iam_role_policy_attachment" "orders_api_tf_deployer_attachment" {
+  policy_arn = aws_iam_policy.orders_api_tf_deployer_policy.arn
+  role       = aws_iam_role.orders_api_tf_deployer_role.name
+}
