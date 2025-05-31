@@ -143,7 +143,9 @@ resource "aws_iam_policy" "orders_api_tf_deployer_policy" {
           "iam:GetPolicy",
           "iam:ListRolePolicies",
           "iam:GetPolicyVersion",
-          "iam:ListAttachedRolePolicies"
+          "iam:ListAttachedRolePolicies",
+          "iam:CreatePolicy",
+          "iam:CreatePolicyVersion",
         ],
         Resource = [
           data.aws_iam_role.orders_api_role.arn,
