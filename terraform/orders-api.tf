@@ -62,13 +62,9 @@ resource "aws_iam_policy" "orders_api_tf_deployer_policy" {
           "apigateway:DELETE",
           "apigateway:HEAD",
           "apigateway:OPTIONS",
+          "apigateway:UpdateRestApiPolicy",
         ],
-        Resource = [
-          "arn:aws:apigateway:${var.region}::/restapis/${data.aws_api_gateway_rest_api.orders_rest_api.id}/*",
-          "arn:aws:apigateway:${var.region}::/restapis/${data.aws_api_gateway_rest_api.orders_rest_api.id}",
-          "arn:aws:apigateway:${var.region}::/domainnames/${data.aws_api_gateway_domain_name.orders_domain_name.domain_name}",
-          "arn:aws:apigateway:${var.region}::/domainnames/${data.aws_api_gateway_domain_name.orders_domain_name.domain_name}/*",
-        ]
+        Resource = ["*"]
       },
       {
         Effect = "Allow",
@@ -147,12 +143,16 @@ resource "aws_iam_policy" "orders_api_tf_deployer_policy" {
           "iam:GetPolicy",
           "iam:ListRolePolicies",
           "iam:GetPolicyVersion",
-          "iam:ListAttachedRolePolicies"
+          "iam:ListAttachedRolePolicies",
+          "iam:CreatePolicy",
+          "iam:CreatePolicyVersion",
+          "iam:AttachRolePolicy",
         ],
         Resource = [
           data.aws_iam_role.orders_api_role.arn,
           data.aws_iam_policy.orders_api_policy.arn,
-          data.aws_iam_policy.datadog_kms_policy.arn
+          data.aws_iam_policy.datadog_kms_policy.arn,
+          "*"
         ]
       },
       {
