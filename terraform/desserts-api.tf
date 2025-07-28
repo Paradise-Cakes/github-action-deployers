@@ -148,7 +148,8 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "iam:ListRolePolicies",
           "iam:GetPolicyVersion",
           "iam:ListPolicyVersions",
-          "iam:ListAttachedRolePolicies"
+          "iam:ListAttachedRolePolicies",
+          "iam:CreatePolicyVersion",
         ],
         Resource = [
           data.aws_iam_role.desserts_api_role.arn,
