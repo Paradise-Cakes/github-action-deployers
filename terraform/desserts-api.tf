@@ -131,11 +131,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "iam:CreatePolicyVersion",
           "iam:*",
         ],
-        Resource = [
-          data.aws_iam_role.desserts_api_role.arn,
-          data.aws_iam_policy.desserts_api_policy.arn,
-          data.aws_iam_policy.datadog_kms_policy.arn
-        ]
+        Resource = ["*"]
       },
       {
         Effect = "Allow",
