@@ -115,28 +115,7 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
       {
         Effect = "Allow",
         Action = [
-          "ecr:GetAuthorizationToken",
-          "ecr:InitiateLayerUpload",
-          "ecr:UploadLayerPart",
-          "ecr:CompleteLayerUpload",
-          "ecr:PutImage",
-          "ecr:BatchCheckLayerAvailability",
-          "ecr:BatchGetImage",
-          "ecr:DescribeImages",
-          "ecr:ListImages",
-          "ecr:DescribeRepositories",
-          "ecr:ListTagsForResource",
-          "ecr:TagResource",
-          "ecr:UntagResource",
-          "ecr:CreateRepository",
-          "ecr:DeleteRepository",
-          "ecr:DeleteRepositoryPolicy",
-          "ecr:PutLifecyclePolicy",
-          "ecr:DeleteLifecyclePolicy",
-          "ecr:PutImageScanningConfiguration",
-          "ecr:PutImageTagMutability",
-          "ecr:StartImageScan",
-          "ecr:StopImageScan",
+          "ecr:*",
         ],
         Resource = ["*"]
       },
@@ -147,13 +126,12 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
           "iam:GetPolicy",
           "iam:ListRolePolicies",
           "iam:GetPolicyVersion",
-          "iam:ListAttachedRolePolicies"
+          "iam:ListPolicyVersions",
+          "iam:ListAttachedRolePolicies",
+          "iam:CreatePolicyVersion",
+          "iam:*",
         ],
-        Resource = [
-          data.aws_iam_role.desserts_api_role.arn,
-          data.aws_iam_policy.desserts_api_policy.arn,
-          data.aws_iam_policy.datadog_kms_policy.arn
-        ]
+        Resource = ["*"]
       },
       {
         Effect = "Allow",

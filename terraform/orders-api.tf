@@ -181,6 +181,13 @@ resource "aws_iam_policy" "orders_api_tf_deployer_policy" {
         Resource = [
           data.aws_lambda_function.orders_api.arn
         ]
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "cloudfront:UpdateDistribution",
+        ],
+        Resource = ["*"]
       }
     ]
   })
