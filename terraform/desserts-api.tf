@@ -159,6 +159,13 @@ resource "aws_iam_policy" "desserts_api_tf_deployer_policy" {
         Resource = [
           data.aws_lambda_function.desserts_api.arn
         ]
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "es:*"
+        ],
+        Resource = ["*"]
       }
     ]
   })
